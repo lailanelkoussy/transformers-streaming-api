@@ -36,7 +36,8 @@ streamlit run frontend/streamlit_app.py
 # Possible Customizations
 
 ## Backend
-1. Change model name in backend/fastapi_app.py by changing environment variable to other model path
+### Change model
+Change model name in backend/fastapi_app.py by changing environment variable to other model path
 
 ```python
 import os
@@ -104,5 +105,22 @@ st.write_stream(response_generator(prompt))
 
 Everything else is changeable. 
 
+
+# Possible error sources 
+
+- If the model seems to be hallucinating/generating rubbish content and you are using several NVIDIA GPUs, you might have a problem with how the model is divided onto your hardware.
+  The problem could be originating from the ```device_map='auto'``` parameter in the transformers model declaration.
+
+How to solve this ?
+- If you need the model to be partitioned between your GPUs (Does not work on Windows)
+  - Make sure you have NCCL (NVIDIA Collective Communications Library) downloaded
+  - Try downloading and configuring accelerate using ```bash pip install accelerate``` then ```bash accelerate config```
+- If the model can fit on one of your GPUS: 
+  - Change transformers declaration as such : 
+  ```python 
+    - self.model = AutoModelForCausalLM.from_pretrained(self.model_name, trust_remote_code=True, device_map="auto")
+  # You can change the 0 in .to(cuda:0) to whichever GPU id you want the model to be loaded to, or you can write .to('cuda')
+    + self.model = AutoModelForCausalLM.from_pretrained(self.model_name, trust_remote_code=True).to('cuda:0')
+  ```
 
 
