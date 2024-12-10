@@ -6,7 +6,7 @@ It was built mainly using this [tutorial](https://medium.com/@coldstart_coder/ma
 This example uses Huggingface **transformers** library and **FastAPI** for the backend, along with a simple **streamlit** frontend to consume the API.
 
 
-Included is a requirements.txt folder for the env dependencies
+Included is a requirements.txt file for the env dependencies
 
 
 # Set up environment
